@@ -1,4 +1,4 @@
-package edu.mbhs.graphics.aepr.util;
+package edu.mbhs.graphics.aepr;
 import java.awt.image.BufferedImage;
 
 public interface VideoStream {
