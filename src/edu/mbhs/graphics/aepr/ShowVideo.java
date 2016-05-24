@@ -41,22 +41,27 @@ public class ShowVideo extends JFrame {
 		VideoCapturer cap;
 		ApplyBlur blur;
 		FindContours fc;
+		FrameStream end;	//the final product of the pipeline
 		
 		public DrawFrame(){
 			super();
 			
 			//SET UP PIPELINE HERE
 			cap=new VideoCapturer();
-			/*
 			blur=new ApplyBlur(cap);
 			blur.setBlurSize(new Size(10,10));
-			*/
-			fc=new FindContours(cap);
+			end=blur	;
 		}
 		
 		public void paintComponent(Graphics g){
 			super.paintComponents(g);
-			g.drawImage(fc.frame(), 0, 0, getWidth() , getHeight() , null);
+			g.drawImage(end.frame(), 0, 0, getWidth() , getHeight() , null);
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				// AUTO Auto-generated catch block
+				e.printStackTrace();
+			}
 			repaint();
 		}
 	}

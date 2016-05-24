@@ -15,6 +15,10 @@ import edu.mbhs.graphics.aepr.FrameStream;
 import edu.mbhs.graphics.aepr.Mat2Imag;
 
 public class FindContours implements FrameStream {
+	static {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+	
 	FrameStream stream;
 	Mat2Imag m2i=new Mat2Imag();
 	
