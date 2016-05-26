@@ -11,15 +11,14 @@ public class PipelineEnd extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// AUTO Auto-generated method stub
-		
 		//SET UP PIPELINE HERE
 		VideoCapturer cap=new VideoCapturer();
-		//blur=new ApplyBlur(cap);
-		//blur.setBlurSize(new Size(10,10));
-		FindFaces ff=new FindFaces(cap);
+		RGBConfig rgb=new RGBConfig(cap);
+		FindFaces ff=new FindFaces(rgb);
 		DrawFromRects dr=new DrawFromRects(ff);
-		FrameStream end=dr;
+		
+		FrameStream end=dr;	//this should be the last element of the pipeline
+		
 		ImageView img=new ImageView(end.frame());
 		StackPane root=new StackPane(img);
 		

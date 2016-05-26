@@ -62,7 +62,7 @@ public class DrawFromRects implements FrameStream {
              list.add(l1);
              list.add(l2);
              
-             Imgproc.polylines(m2i.mat, list, false, new Scalar( 0, 255, 0 ),2,8,0);
+             //Imgproc.polylines(m2i.mat, list, false, new Scalar( 0, 255, 0 ),2,8,0);
              Imgproc.ellipse( m2i.mat, center, new Size( rect.width*0.5, rect.height*0.5), 0, 0, 360, new Scalar( 0, 255, 0 ), 4, 8, 0 );  
         }
 		return m2i.getFXImage(m2i.mat);
