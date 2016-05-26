@@ -1,6 +1,6 @@
 package edu.mbhs.graphics.aepr;
 
-import java.awt.image.BufferedImage;
+import javafx.scene.image.WritableImage;
 
 import org.opencv.core.Mat;
 
@@ -15,5 +15,5 @@ public interface FrameStream {
 	 * Returns the current frame as an image
 	 * @return the current frame for this stream as an image
 	 */
-	public BufferedImage frame();
+	public WritableImage frame();
 }

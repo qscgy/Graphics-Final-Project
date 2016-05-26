@@ -27,12 +27,21 @@ public class Mat2Imag {
                 img = new BufferedImage(w, h, 
                             BufferedImage.TYPE_3BYTE_BGR);
         }
-        public BufferedImage getImage(Mat mat){
-            getSpace(mat);
-            mat.get(0, 0, dat);
-            img.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), dat);
+    
+    public BufferedImage getImage(Mat mat){
+    	getSpace(mat);
+    	mat.get(0, 0, dat);
+    	img.getRaster().setDataElements(0, 0, mat.cols(), mat.rows(), dat);
         return img;
     }
+        
+    public WritableImage getFXImage(Mat mat){
+    	BufferedImage bimg=this.getImage(mat);
+    	WritableImage wimg=new WritableImage(bimg.getWidth(),bimg.getHeight());
+    	SwingFXUtils.toFXImage(bimg, wimg);
+    	return wimg;
+    }
+    
     static{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }

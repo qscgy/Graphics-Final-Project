@@ -1,12 +1,8 @@
 package edu.mbhs.graphics.aepr;
-import java.awt.image.BufferedImage;
-
-import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 
@@ -23,9 +19,9 @@ public class VideoCapturer implements FrameStream{
 		capture.open(0);
 	}
 	
-	public BufferedImage frame(){
+	public WritableImage frame(){
 		capture.read(m2i.mat);
-        return m2i.getImage(m2i.mat);
+        return m2i.getFXImage(m2i.mat);
 	}
 	
 	@Override
