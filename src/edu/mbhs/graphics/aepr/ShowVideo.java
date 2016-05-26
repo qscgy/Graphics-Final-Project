@@ -41,6 +41,8 @@ public class ShowVideo extends JFrame {
 		VideoCapturer cap;
 		ApplyBlur blur;
 		FindContours fc;
+		FindFaces ff;
+		DrawFromRects dr;
 		FrameStream end;	//the final product of the pipeline
 		
 		public DrawFrame(){
@@ -48,9 +50,11 @@ public class ShowVideo extends JFrame {
 			
 			//SET UP PIPELINE HERE
 			cap=new VideoCapturer();
-			blur=new ApplyBlur(cap);
-			blur.setBlurSize(new Size(10,10));
-			end=blur	;
+			//blur=new ApplyBlur(cap);
+			//blur.setBlurSize(new Size(10,10));
+			ff=new FindFaces(cap);
+			dr=new DrawFromRects(ff);
+			end=dr;
 		}
 		
 		public void paintComponent(Graphics g){

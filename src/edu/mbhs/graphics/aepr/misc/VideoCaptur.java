@@ -43,7 +43,7 @@ public class VideoCaptur {
 	CascadeClassifier face_cascade =new CascadeClassifier("/usr/local/opt/opencv3/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml");
 	VideoCapture cap;
 	Mat2Imag m2i = new Mat2Imag();
-	 Mat mGrey=new Mat();  
+	 Mat mGrey=new Mat();
 	/*
 	 * This constructor opens the video stream.
 	 * @param none
