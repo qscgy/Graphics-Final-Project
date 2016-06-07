@@ -23,7 +23,7 @@ public class DrawFromRects implements FrameStream {
 	List<MatOfPoint> lines = new ArrayList<>();
 	CascadeClassifier face_cascade = new CascadeClassifier(
 			"/usr/local/opt/opencv3/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml");
-	List<MatOfPoint> deltaS = new ArrayList<>();
+	public List<MatOfPoint> deltaS = new ArrayList<>();
 	public boolean deltaSFilled=false;
 	public int a = 0;
 	public double faceRadius=1;
@@ -83,15 +83,19 @@ public class DrawFromRects implements FrameStream {
 			if (!deltaSFilled) {
 				//List<MatOfPoint> deltaS = new ArrayList<>();
 				//System.out.println(deltaS);
-				System.out.println(lines.size());
+				//System.out.println(lines.size());
 				List<MatOfPoint> tmp=new ArrayList<>();	//put everything into a new list
-				for (int i = 0; i < lines.size(); i++) {
-					Point[] p1 = lines.get(i).toArray();
-					tmp.add(new MatOfPoint(new Point(p1[0].x - center.x, p1[0].y - center.y), new Point(p1[1].x - center.x, p1[1].y - center.y)));
-					//deltaS.add(new MatOfPoint(new Point(p1[0].x - center.x, p1[0].y - center.y)));
+				for (MatOfPoint mp : lines) {
+					List<Point> list2 = new ArrayList<>();
+					for (Point p : mp.toArray()) {
+						list2.add(new Point(p.x - center.x, p.y - center.y));
+					}
+					MatOfPoint mofp = new MatOfPoint();
+					mofp.fromList(list2);
+					tmp.add(mofp);
 				}
 				
-				deltaS=tmp;	//make deltaS the list with all of the coordinates				
+				deltaS=tmp;	//make deltaS the list with all of the coordinates relative to the center			
 				deltaSFilled=true;
 				faceRadius=rect.width;
 			}
@@ -121,14 +125,13 @@ public class DrawFromRects implements FrameStream {
 				for (Point p : mp.toArray()) {
 					list2.add(new Point((p.x*scale + center.x), (p.y*scale + center.y)));
 				}
+				MatOfPoint mofp = new MatOfPoint();
+				mofp.fromList(list2);
+				list.add(mofp);
 			}
-			MatOfPoint mofp = new MatOfPoint();
-			mofp.fromList(list2);
-			list.add(mofp);
 
-			Imgproc.polylines(m2i.mat, list, false, new Scalar(0, 255, 0), 2, 8, 0);
-			Imgproc.ellipse(m2i.mat, center, new Size(rect.width * 0.5, rect.height * 0.5), 0, 0, 360, new Scalar(0,
-					255, 0), 4, 8, 0);
+			Imgproc.polylines(m2i.mat, list, false, new Scalar(0, 0, 0), (int)(18*scale), 8, 0);
+			//Imgproc.ellipse(m2i.mat, center, new Size(rect.width * 0.5, rect.height * 0.5), 0, 0, 360, new Scalar(0, 255, 0), 4, 8, 0);
 		}
 		return m2i.getFXImage(m2i.mat);
 	}

@@ -1,13 +1,12 @@
 package edu.mbhs.graphics.aepr;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -30,17 +29,20 @@ public class PipelineEnd extends Application {
 		
 		ImageView img=new ImageView(end.frame());
 		StackPane root=new StackPane(img);
-		root.setOnMouseClicked(new EventHandler<MouseEvent>() {
-		    @Override
-		    public void handle(MouseEvent event) {
-		    	
-		    	MatOfPoint l1=new MatOfPoint(new Point(event.getSceneX(),event.getSceneY()), new Point(event.getSceneX(),event.getSceneY()));
-		        points.add(l1);
-		        dr.a++;
-		        dr.deltaSFilled=false;
+		
+		List<Point> tmp=new ArrayList<>();
+		root.setOnMouseDragged(e->{
+			tmp.clear();
+			tmp.add(new Point(e.getSceneX(),e.getSceneY()));
+		    MatOfPoint l1=new MatOfPoint();
+		    l1.fromList(tmp);
+		    points.add(l1);
+		    //dr.deltaS.add(new Point(e.getSceneX()-,e.getSceneY())))
+		    dr.a++;
+		    System.out.println(points.size());
+		    dr.deltaSFilled=false;
 		        //System.out.println(l1);
 		        //System.out.println(points);
-		    }
 		});
 
 		
