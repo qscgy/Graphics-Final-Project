@@ -5,6 +5,11 @@ import javafx.scene.image.WritableImage;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Converts the camera's BGR image to RGB.
+ * @author Sam Ehrenstein
+ *
+ */
 public class RGBConfig implements FrameStream {
 
 	Mat2Imag m2i = new Mat2Imag();

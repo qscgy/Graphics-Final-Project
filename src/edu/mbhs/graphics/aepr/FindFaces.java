@@ -5,7 +5,12 @@ import org.opencv.core.MatOfRect;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
-public class FindFaces{
+/**
+ * Detects faces with Haar cascades to be used by other pipeline elements.
+ * @author Sam Ehrenstein
+ *
+ */
+public class FindFaces {
 	Mat2Imag m2i = new Mat2Imag();
 	Mat mGrey=new Mat();
 	FrameStream stream;
