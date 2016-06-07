@@ -62,6 +62,7 @@ public class DrawFromRects implements FrameStream {
 			// Not really needed
 			pnt[2] = (rect.width * 0.5) * 5;
 			pnt[3] = (rect.height * 0.5) * 5;
+			
 			/*
 			 * if(deltaS==null){ deltaS=new ArrayList<MatOfPoint>(); List<Point>
 			 * list=new ArrayList<>(); for(MatOfPoint mp:lines){ for(Point
@@ -84,6 +85,7 @@ public class DrawFromRects implements FrameStream {
 				//List<MatOfPoint> deltaS = new ArrayList<>();
 				//System.out.println(deltaS);
 				//System.out.println(lines.size());
+				long startTime=System.nanoTime();
 				List<MatOfPoint> tmp=new ArrayList<>();	//put everything into a new list
 				for (MatOfPoint mp : lines) {
 					List<Point> list2 = new ArrayList<>();
@@ -94,6 +96,7 @@ public class DrawFromRects implements FrameStream {
 					mofp.fromList(list2);
 					tmp.add(mofp);
 				}
+				System.out.println("Time: "+((System.nanoTime()-startTime)/1000.0)+" us");
 				
 				deltaS=tmp;	//make deltaS the list with all of the coordinates relative to the center			
 				deltaSFilled=true;
@@ -120,8 +123,8 @@ public class DrawFromRects implements FrameStream {
 			double scale=rect.width/faceRadius;
 			//System.out.println(scale);
 			List<MatOfPoint> list = new ArrayList<>();
-			List<Point> list2 = new ArrayList<>();
 			for (MatOfPoint mp : deltaS) {
+				List<Point> list2 = new ArrayList<>();
 				for (Point p : mp.toArray()) {
 					list2.add(new Point((p.x*scale + center.x), (p.y*scale + center.y)));
 				}

@@ -31,18 +31,22 @@ public class PipelineEnd extends Application {
 		StackPane root=new StackPane(img);
 		
 		List<Point> tmp=new ArrayList<>();
-		root.setOnMouseDragged(e->{
+		root.setOnMousePressed(e->{
 			tmp.clear();
+		});
+		root.setOnMouseDragged(e->{
 			tmp.add(new Point(e.getSceneX(),e.getSceneY()));
-		    MatOfPoint l1=new MatOfPoint();
-		    l1.fromList(tmp);
-		    points.add(l1);
-		    //dr.deltaS.add(new Point(e.getSceneX()-,e.getSceneY())))
-		    dr.a++;
-		    System.out.println(points.size());
-		    dr.deltaSFilled=false;
 		        //System.out.println(l1);
 		        //System.out.println(points);
+		});
+		root.setOnMouseReleased(e->{
+			MatOfPoint l1=new MatOfPoint();
+		    l1.fromList(tmp);
+			points.add(l1);
+		    //dr.deltaS.add(new Point(e.getSceneX()-,e.getSceneY())))
+		    dr.a++;
+		    //System.out.println(points.size());
+		    dr.deltaSFilled=false;
 		});
 
 		
