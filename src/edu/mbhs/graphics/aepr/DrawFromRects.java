@@ -23,9 +23,8 @@ public class DrawFromRects implements FrameStream {
 	List<MatOfPoint> lines = new ArrayList<>();
 	CascadeClassifier face_cascade = new CascadeClassifier(
 			"/usr/local/opt/opencv3/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml");
-	public List<MatOfPoint> deltaS = new ArrayList<>();
+	public List<MatOfPoint> deltaS = new ArrayList<>();	//points representing vectors for the offset of each point from the center of the face
 	public boolean deltaSFilled=false;
-	public int a = 0;
 	public double faceRadius=1;
 	public int lineSize=15;
 	public String filter="None";
@@ -33,11 +32,11 @@ public class DrawFromRects implements FrameStream {
 	int blue=0;
 	int green=0;
 	
-	public DrawFromRects(FindFaces ff, List<MatOfPoint> lines) {
+	public DrawFromRects(FindFaces ff) {
 		this.ff = ff;
 		this.stream = ff.stream;
 		mGrey = new Mat();
-		this.lines = lines;
+		this.lines = new ArrayList<MatOfPoint>();
 	}
 
 	@Override
@@ -91,21 +90,23 @@ public class DrawFromRects implements FrameStream {
 				//System.out.println(deltaS);
 				//System.out.println(lines.size());
 				//long startTime=System.nanoTime();
+				
 				List<MatOfPoint> tmp=new ArrayList<>();	//put everything into a new list
-				for (MatOfPoint mp : lines) {
+				for (MatOfPoint mp : lines) {	//go through each MatOfPoint, which is an individual polyline
 					List<Point> list2 = new ArrayList<>();
-					for (Point p : mp.toArray()) {
+					for (Point p : mp.toArray()) {	//go through each point to get the offset from the center
 						list2.add(new Point(p.x - center.x, p.y - center.y));
 					}
+					//stick it into a new MatOfPoint
 					MatOfPoint mofp = new MatOfPoint();
 					mofp.fromList(list2);
 					tmp.add(mofp);
 				}
 				//System.out.println("Time: "+((System.nanoTime()-startTime)/1000.0)+" us");
 				
-				deltaS=tmp;	//make deltaS the list with all of the coordinates relative to the center			
-				deltaSFilled=true;
-				faceRadius=rect.width;
+				deltaS=tmp;	//make deltaS the list we were storing into (tmp)			
+				deltaSFilled=true;	//don't keep doing this step (unless updated from elsewhere)
+				faceRadius=rect.width;	//scale with respect to this face (in practice, the first one in the MatOfRect)
 			}
 			//System.out.println(deltaS.size());
 			//
@@ -124,14 +125,14 @@ public class DrawFromRects implements FrameStream {
 			}
 			*/
 			
-			//Turns everything into a single polyline
+			//Takes deltaS and draws it on the face
 			double scale=rect.width/faceRadius;
 			//System.out.println(scale);
 			List<MatOfPoint> list = new ArrayList<>();
 			for (MatOfPoint mp : deltaS) {
 				List<Point> list2 = new ArrayList<>();
 				for (Point p : mp.toArray()) {
-					list2.add(new Point((p.x*scale + center.x), (p.y*scale + center.y)));
+					list2.add(new Point((p.x*scale + center.x), (p.y*scale + center.y)));	//draw at the proper offset from the center, scaled to the size of the face
 				}
 				MatOfPoint mofp = new MatOfPoint();
 				mofp.fromList(list2);
@@ -154,6 +155,10 @@ public class DrawFromRects implements FrameStream {
 	        break;
 		}
 		return m2i.getFXImage(m2i.mat);
+	}
+	
+	public boolean addMOP(MatOfPoint mop){
+		return lines.add(mop);
 	}
 
 	public void setRed(int red) {

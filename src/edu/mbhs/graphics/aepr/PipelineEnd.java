@@ -24,17 +24,15 @@ import org.opencv.core.Point;
 
 public class PipelineEnd extends Application {
 	
-	ArrayList<MatOfPoint> points=new ArrayList<>();
-	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		//SET UP PIPELINE HERE
 		VideoCapturer cap=new VideoCapturer();
 		RGBConfig rgb=new RGBConfig(cap);
 		FindFaces ff=new FindFaces(rgb);
-		DrawFromRects dr=new DrawFromRects(ff,points);
-		
+		DrawFromRects dr=new DrawFromRects(ff);
 		FrameStream end=dr;	//this should be the last element of the pipeline
+		//END PIPELINE SETUP
 		
 		ImageView img=new ImageView(end.frame());
 		Group root=new Group(img);
@@ -69,10 +67,13 @@ public class PipelineEnd extends Application {
 		controls.add(filterLabel,0,1);
 		controls.add(filters, 1, 1);
 		
+		//reset tmp on mouse press to be ready to receive points and then add the start point
 		List<Point> tmp=new ArrayList<>();
 		root.setOnMousePressed(e->{
 			tmp.clear();
+			tmp.add(new Point(e.getSceneX(),e.getSceneY()));
 		});
+		//put each point in tmp (this fires continually while mouse is down)
 		root.setOnMouseDragged(e->{
 			tmp.add(new Point(e.getSceneX(),e.getSceneY()));
 		        //System.out.println(l1);
@@ -80,25 +81,24 @@ public class PipelineEnd extends Application {
 		});
 		root.setOnMouseReleased(e->{
 			MatOfPoint l1=new MatOfPoint();
-		    l1.fromList(tmp);
-			points.add(l1);
+		    l1.fromList(tmp);	//get a MatOfPoint for the polyline that was just drawn
+			dr.addMOP(l1);	//give it to dr
 		    //dr.deltaS.add(new Point(e.getSceneX()-,e.getSceneY())))
-		    dr.a++;
 		    //System.out.println(points.size());
-		    dr.deltaSFilled=false;
+		    dr.deltaSFilled=false;	//make dr calculate deltaS for the new points
 		});
 		
 		//set up buttons
 		Button redraw=new Button("Redraw");
 		Button clear=new Button("Clear");
 		redraw.setOnAction(e->{dr.deltaSFilled=true;});
-		clear.setOnAction(e->{points.clear(); dr.lines.clear(); dr.deltaS.clear();});
+		clear.setOnAction(e->{dr.lines.clear(); dr.deltaS.clear();});
 		//controls.getChildren().add(redraw);
 		controls.add(clear,0,2);
 		
 		//set up RGB sliders
 		Slider red=new Slider(0,255,0);
-		Slider green=new Slider(0,255,0);
+		Slider green=new Slider(0,255,255);
 		Slider blue=new Slider(0,255,0);
 		red.valueProperty().addListener(new ChangeListener<Number>(){
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -130,6 +130,7 @@ public class PipelineEnd extends Application {
 		
 		root.getChildren().add(controls);
 		
+		//updates the image every 60 ms or something
 		AnimationTimer timer=new AnimationTimer(){
 			public void handle(long now){
 				img.setImage(end.frame());
