@@ -27,7 +27,12 @@ public class DrawFromRects implements FrameStream {
 	public boolean deltaSFilled=false;
 	public int a = 0;
 	public double faceRadius=1;
-
+	public int lineSize=15;
+	public String filter="None";
+	int red=0;
+	int blue=0;
+	int green=0;
+	
 	public DrawFromRects(FindFaces ff, List<MatOfPoint> lines) {
 		this.ff = ff;
 		this.stream = ff.stream;
@@ -85,7 +90,7 @@ public class DrawFromRects implements FrameStream {
 				//List<MatOfPoint> deltaS = new ArrayList<>();
 				//System.out.println(deltaS);
 				//System.out.println(lines.size());
-				long startTime=System.nanoTime();
+				//long startTime=System.nanoTime();
 				List<MatOfPoint> tmp=new ArrayList<>();	//put everything into a new list
 				for (MatOfPoint mp : lines) {
 					List<Point> list2 = new ArrayList<>();
@@ -96,7 +101,7 @@ public class DrawFromRects implements FrameStream {
 					mofp.fromList(list2);
 					tmp.add(mofp);
 				}
-				System.out.println("Time: "+((System.nanoTime()-startTime)/1000.0)+" us");
+				//System.out.println("Time: "+((System.nanoTime()-startTime)/1000.0)+" us");
 				
 				deltaS=tmp;	//make deltaS the list with all of the coordinates relative to the center			
 				deltaSFilled=true;
@@ -133,10 +138,34 @@ public class DrawFromRects implements FrameStream {
 				list.add(mofp);
 			}
 
-			Imgproc.polylines(m2i.mat, list, false, new Scalar(0, 0, 0), (int)(18*scale), 8, 0);
+			//System.out.println(red+" "+green+" "+blue);
+			Imgproc.polylines(m2i.mat, list, false, new Scalar(red, green, blue), (int)(lineSize*scale), 8, 0);
 			//Imgproc.ellipse(m2i.mat, center, new Size(rect.width * 0.5, rect.height * 0.5), 0, 0, 360, new Scalar(0, 255, 0), 4, 8, 0);
 		}
+		switch(filter){
+		case "HSV":
+			Imgproc.cvtColor(m2i.mat, m2i.mat, Imgproc.COLOR_RGB2HSV);
+			break;
+		case "Erode":
+			Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new  Size(2*12 + 1, 2*12 + 1));
+	        Imgproc.dilate(m2i.mat, m2i.mat, element);
+	        Imgproc.erode(m2i.mat, m2i.mat, element);
+	        Imgproc.cvtColor(m2i.mat, m2i.mat, Imgproc.COLOR_BGR2RGB);
+	        break;
+		}
 		return m2i.getFXImage(m2i.mat);
+	}
+
+	public void setRed(int red) {
+		this.red = red;
+	}
+
+	public void setBlue(int blue) {
+		this.blue = blue;
+	}
+
+	public void setGreen(int green) {
+		this.green = green;
 	}
 
 }
