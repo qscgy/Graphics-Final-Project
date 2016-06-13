@@ -12,11 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.opencv.core.MatOfPoint;
@@ -121,14 +123,28 @@ public class PipelineEnd extends Application {
 		Label redLabel=new Label("Red: ");
 		Label greenLabel=new Label("Green: ");
 		Label blueLabel=new Label("Blue: ");
+		/*
 		controls.add(redLabel,0,3);
 		controls.add(red,1,3);
 		controls.add(greenLabel,0,4);
 		controls.add(green,1,4);
 		controls.add(blueLabel,0,5);
 		controls.add(blue,1,5);
+		*/
 		
 		root.getChildren().add(controls);
+		
+		ColorPicker picker=new ColorPicker();
+		picker.setValue(Color.CORAL);
+		picker.setOnAction(e->{
+			Color c=picker.getValue();
+			dr.red=(int)(c.getRed()*255);
+			dr.blue=(int)(c.getBlue()*255);
+			dr.green=(int)(c.getGreen()*255);
+		});
+		Label pickerLabel=new Label("Color: ");
+		controls.add(pickerLabel, 0, 3);
+		controls.add(picker, 1, 3);
 		
 		//updates the image every 60 ms or something
 		AnimationTimer timer=new AnimationTimer(){

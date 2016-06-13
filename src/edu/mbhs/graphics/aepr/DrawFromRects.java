@@ -62,7 +62,8 @@ public class DrawFromRects implements FrameStream {
 
 		MatOfRect faces = ff.getRects();
 		m2i.mat = stream.readMat();
-
+		
+		//Only use the largest face
 		Rect[] rects = faces.toArray();
 		if(rects.length > 0) {
 			Rect rect = rects[0];
@@ -168,8 +169,8 @@ public class DrawFromRects implements FrameStream {
 			lines = list;
 			// System.out.println(red+" "+green+" "+blue);
 			Imgproc.polylines(m2i.mat, list, false, new Scalar(red, green, blue), (int) (lineSize * scale), 8, 0);
-			Imgproc.ellipse(m2i.mat, center, new Size(rect.width * 0.5, rect.height * 0.5), 0, 0, 360,
-					new Scalar(0, 255, 0), 4, 8, 0);
+			//Imgproc.ellipse(m2i.mat, center, new Size(rect.width * 0.5, rect.height * 0.5), 0, 0, 360,
+			//		new Scalar(0, 255, 0), 4, 8, 0);
 		}
 
 		switch (filter) {
